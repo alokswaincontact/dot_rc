@@ -1,0 +1,104 @@
+#Path Management
+#---------------
+checkPath () {
+        case ":$PATH:" in
+                *":$1:"*) return 1
+                        ;;  
+        esac
+        return 0;
+}
+
+# Prepend to $PATH
+prependToPath () {
+        for a; do
+                checkPath $a
+                if [ $? -eq 0 ]; then
+                        PATH=$a:$PATH
+                fi  
+        done
+        export PATH
+}
+
+# Append to $PATH
+appendToPath () {
+        for a; do
+                checkPath $a
+                if [ $? -eq 0 ]; then
+                        PATH=$PATH:$a
+                fi  
+        done
+        export PATH
+}
+
+pupdate() { case ":${PATH:=$1}:" in *:$1:*) ;; *) PATH="$1:$PATH" ;; esac; }
+
+pupdate ~/bin
+#pupdate ~/local/bin
+prependToPath ~/local/bin
+
+export PATH=~/local/bin:$PATH
+
+
+#EDITOR
+#------
+#Set EDITOR for cscope
+EDITOR=vim
+export EDITOR;
+
+#BASH PROMPT COLOR
+#-----------------
+#https://www.cyberciti.biz/faq/bash-shell-change-the-color-of-my-shell-prompt-under-linux-or-unix/
+#Previous PS1
+#-bash-4.2$ echo $PS1
+#\s-\v\$
+#\h:\W \u\$
+##PS1='\h:\w\$ '
+##export PS1="\[\e[35m\]\w\\$\[\e[m\] "  #Purple
+export PS1="\[\e[36m\]\w\\$\[\e[m\] "    #Cyan
+
+
+#For adding libevent for tmux
+#LOCAL_BIN=~/local/lib/
+#if [ -n "$LD_LIBRARY_PATH" ]; then
+#  LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$LOCAL_BIN
+#else
+#  LD_LIBRARY_PATH=$LOCAL_BIN
+#fi
+#export LD_LIBRARY_PATH
+
+#Configure Colors for ls
+#-----------------------
+alias ls='ls -G'
+alias ll='ls -lG'
+export CLICOLOR=1
+#export LSCOLORS=GxFxCxDxBxegedabagaced
+
+
+#Ctags
+#-----
+alias tags='ctags -L cscope.files'
+
+#History
+#-------
+alias h='history'
+
+#Eliminate duplicate entries in history
+#Why does bash still keep duplicate lines with erasedups?
+#https://unix.stackexchange.com/questions/398763/why-does-bash-still-keep-duplicate-lines-with-erasedups
+export HISTCONTROL=ignoreboth:erasedups
+
+#Python Virtualenv
+#-----------------
+#export WORKON_HOME=$HOME/.virtualenvs
+#source /usr/bin/virtualenvwrapper.sh
+#source /Users/aloswain/anaconda3/bin/virtualenvwrapper.sh
+
+#GoLang Configuration
+#--------------------
+export GOPATH=$HOME/go
+export GOBIN=$GOPATH/bin
+export PATH=$PATH:$(go env GOPATH)/bin
+
+#Some Dynamic Library Manipulation for MacOS
+#-------------------------------------------
+export DYLD_LIBRARY_PATH=/usr/lib/:ADDITION_LIBRARY_PATH_LOCATION
