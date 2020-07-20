@@ -53,11 +53,12 @@ export EDITOR;
 #\s-\v\$
 #\h:\W \u\$
 ##PS1='\h:\w\$ '
-##export PS1="\[\e[35m\]\w\\$\[\e[m\] "  #Purple
-export PS1="\[\e[36m\]\w\\$\[\e[m\] "    #Cyan
+export PS1="\[\e[35m\]\w\\$\[\e[m\] "  #Purple
+#export PS1="\[\e[36m\]\w\\$\[\e[m\] "    #Cyan
 
 
 #For adding libevent for tmux
+#----------------------------
 #LOCAL_BIN=~/local/lib/
 #if [ -n "$LD_LIBRARY_PATH" ]; then
 #  LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$LOCAL_BIN
@@ -65,6 +66,24 @@ export PS1="\[\e[36m\]\w\\$\[\e[m\] "    #Cyan
 #  LD_LIBRARY_PATH=$LOCAL_BIN
 #fi
 #export LD_LIBRARY_PATH
+
+# Git
+# ---
+# Build a commit frequency list.
+#https://blog.riff.org/2015_10_30_git_tip_of_the_day_show_the_hottest_files_in_a_repo
+ROW_LIMIT=40
+most() {
+git log --name-status $*        | \
+        grep -E '^[A-Z]\s+'     | \
+        cut -c3-500             | \
+        sort                    | \
+        uniq -c                 | \
+        grep -vE '^ {6}1 '      | \
+        sort -n                 | \
+        tail --lines="$ROW_LIMIT"
+}
+
+alias gs='git status'
 
 #Configure Colors for ls
 #-----------------------
@@ -81,6 +100,8 @@ alias tags='ctags -L cscope.files'
 #History
 #-------
 alias h='history'
+export HISTSIZE=10000
+export HISEFILESIZE=10000
 
 #Eliminate duplicate entries in history
 #Why does bash still keep duplicate lines with erasedups?
@@ -93,11 +114,29 @@ export HISTCONTROL=ignoreboth:erasedups
 #source /usr/bin/virtualenvwrapper.sh
 #source /Users/aloswain/anaconda3/bin/virtualenvwrapper.sh
 
+#Python PyCurl
+#-------------
+#export PYCURL_SSL_LIBRARY=nss
+#export PYCURL_SSL_LIBRARY=openssl
+#export PYCURL_CURL_CONFIG=/usr/bin/curl-config
+
+
 #GoLang Configuration
 #--------------------
+#export GOROOT=~/bin/go
 export GOPATH=$HOME/go
 export GOBIN=$GOPATH/bin
 export PATH=$PATH:$(go env GOPATH)/bin
+#export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+
+#Cmake
+#-----
+#pupdate ~/cmake-build/bin
+#pupdate ~/llvm/clang+llvm-8.0.0-x86_64-linux-sles11.3/bin/
+#pupdate ~/llvm/bin
+
+#export LD_LIBRARY_PATH="~/llvm/clang+llvm-8.0.0-x86_64-linux-sles11.3/lib:$LD_LIBRARY_PATH"
+
 
 #Some Dynamic Library Manipulation for MacOS
 #-------------------------------------------
